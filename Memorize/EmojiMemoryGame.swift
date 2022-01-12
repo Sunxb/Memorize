@@ -9,19 +9,24 @@ import Foundation
 
 // VIEW MODEL
 
-class EmojiMemoryGame {
+class EmojiMemoryGame: ObservableObject {
     private static let emojis = [
         "✈️", "🚗", "😈", "🚑", "🧙‍♀️", "🎰", "🎱", "🎲", "🔮", "✨",
         "😀", "😃", "😁", "😄", "😆", "😅", "😂", "🥲", "🤣", "☺️"
     ]
     
     private static func createMemoryGame() -> MemoryGame<String> {
-        MemoryGame(numberOfPairsOfCard: 4) { index in EmojiMemoryGame.emojis[index]}
+        MemoryGame(numberOfPairsOfCard: 3) { index in EmojiMemoryGame.emojis[index]}
     }
-    
-    private var model = EmojiMemoryGame.createMemoryGame()
+        
+    @Published private var model = EmojiMemoryGame.createMemoryGame()
     
     var cards: [MemoryGame<String>.Card] {
         return model.cards
+    }
+    
+    // MARK: - Intent(s)
+    func choose(_ card: MemoryGame<String>.Card) {
+        model.choose(card)
     }
 }
