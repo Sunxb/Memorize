@@ -9,8 +9,12 @@ import Foundation
 
 // MODEL
 
-struct MemoryGame<CardContent> {
+struct MemoryGame<CardContent: Equatable> {
     private(set) var cards: [Card]
+    private var selectedIndex: Int? {
+        get { cards.indices.filter({ cards[$0].isFaceUp }).oneAndOnly }
+        set { cards.indices.forEach({ cards[$0].isFaceUp = ($0 == newValue) }) }
+    }
     
     // 有几对牌
     init(numberOfPairsOfCard: Int, createCardContent: (Int) -> CardContent) {
@@ -24,11 +28,18 @@ struct MemoryGame<CardContent> {
     
     mutating func choose(_ card: Card) {
         guard let chooseIndx = cards.firstIndex(where: { $0.id == card.id }) else { return }
-        cards[chooseIndx].isFaceUp.toggle()
-    }
-    
-    private func index(of card: Card) {
-        return
+        if cards[chooseIndx].isFaceUp || cards[chooseIndx].isMatch { return }
+        
+        if let index = selectedIndex {
+            if cards[index].content == cards[chooseIndx].content {
+               cards[index].isMatch = true
+               cards[chooseIndx].isMatch = true
+            }
+            // 当前选择的必须朝上
+            cards[chooseIndx].isFaceUp = true
+        } else {
+            selectedIndex = chooseIndx
+        }
     }
     
     struct Card: Identifiable {
@@ -37,5 +48,11 @@ struct MemoryGame<CardContent> {
         var content: CardContent
         var id: Int
         
+    }
+}
+
+extension Array {
+    var oneAndOnly: Element? {
+        return count == 1 ? first : nil
     }
 }
