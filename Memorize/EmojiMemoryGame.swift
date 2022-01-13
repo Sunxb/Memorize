@@ -16,7 +16,7 @@ class EmojiMemoryGame: ObservableObject {
     ]
     
     private static func createMemoryGame() -> MemoryGame<String> {
-        MemoryGame(numberOfPairsOfCard: 3) { index in EmojiMemoryGame.emojis[index]}
+        MemoryGame(numberOfPairsOfCard: 4) { index in EmojiMemoryGame.emojis[index]}
     }
         
     @Published private var model = EmojiMemoryGame.createMemoryGame()
