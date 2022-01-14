@@ -35,33 +35,34 @@ struct CardView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                let shape = RoundedRectangle(cornerRadius: DrawingConstant.cornerRadius)
-                if card.isFaceUp {
-                    shape.fill(.white)
-                    shape.strokeBorder(lineWidth: DrawingConstant.lineWidth)
-                    Pie(
-                        startAngle: Angle(degrees: 0 - 90),
-                        endAngle: Angle(degrees: 100 - 90)
-                    ).padding(7).foregroundColor(.red).opacity(0.6)
-                    Text(card.content).font(font(in: geometry.size))
-                } else if card.isMatch {
-                    shape.opacity(DrawingConstant.opacity)
-                } else {
-                    shape.fill()
-                }
+                Pie(
+                    startAngle: Angle(degrees: 0 - 90),
+                    endAngle: Angle(degrees: 100 - 90)
+                )
+                    .padding(7)
+                    .foregroundColor(.red).opacity(0.6)
+                
+                Text(card.content)
+                    .rotationEffect(Angle(degrees: card.isMatch ? 360 : 0))
+                    .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false))
+                    .font(Font.system(size: DrawingConstant.fontSize))
+                    .scaleEffect(scale(thatFits: geometry.size))
             }
+            .modifier(Cardify(isFaceUp: card.isFaceUp))
         }
+    }
+    
+    private func scale(thatFits size: CGSize) -> CGFloat {
+        return min(size.height, size.width) / (DrawingConstant.fontSize / DrawingConstant.fontScale)
     }
     
     private func font(in size: CGSize) -> Font {
         Font.system(size: min(size.height, size.width) * DrawingConstant.fontScale)
     }
     
-    struct DrawingConstant {
-        static let cornerRadius: CGFloat = 20
-        static let lineWidth: CGFloat = 3
-        static let opacity: Double = 0.0
+    private struct DrawingConstant {
         static let fontScale: CGFloat = 0.5
+        static let fontSize: CGFloat = 32
     }
 }
 
