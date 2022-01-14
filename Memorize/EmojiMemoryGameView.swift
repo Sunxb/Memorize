@@ -39,6 +39,10 @@ struct CardView: View {
                 if card.isFaceUp {
                     shape.fill(.white)
                     shape.strokeBorder(lineWidth: DrawingConstant.lineWidth)
+                    Pie(
+                        startAngle: Angle(degrees: 0 - 90),
+                        endAngle: Angle(degrees: 100 - 90)
+                    ).padding(7).foregroundColor(.red).opacity(0.6)
                     Text(card.content).font(font(in: geometry.size))
                 } else if card.isMatch {
                     shape.opacity(DrawingConstant.opacity)
@@ -57,7 +61,7 @@ struct CardView: View {
         static let cornerRadius: CGFloat = 20
         static let lineWidth: CGFloat = 3
         static let opacity: Double = 0.0
-        static let fontScale: CGFloat = 0.55
+        static let fontScale: CGFloat = 0.5
     }
 }
 
